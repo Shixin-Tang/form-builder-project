@@ -8,6 +8,14 @@ import SplitterPanel from 'primevue/splitterpanel'
 
 import { ref, computed, watch } from 'vue'
 
+// --- 动态组件映射 ---
+// 这个对象将 `field.type` 字符串映射到实际的 Vue 组件。
+const componentMap = {
+    text: InputText,
+    email: InputText,
+    textarea: Textarea,
+}
+
 //--- 定义响应式状态 ---
 //绑定 JSON 输入
 const jsonConfigurationInput = ref(
@@ -30,6 +38,13 @@ const jsonConfigurationInput = ref(
                 label: '邮箱',
                 placeholder: '请输入您的邮箱地址',
                 required: true,
+            },
+            {
+                name: 'bio',
+                type: 'textarea',
+                label: '简介',
+                placeholder: '请简单介绍一下自己',
+                autoResize: true,
             },
         ],
         null,
@@ -93,13 +108,11 @@ const submitForm = () => {
                     <form @submit.prevent="submitForm" class="dynamic-form">
                         <div v-for="field in formSchema" :key="field.name" class="form-field">
                             <label :for="field.name">{{ field.label }}</label>
-                            <InputText
-                                v-if="field.type === 'text' || field.type === 'email'"
+                            <component
+                                :is="componentMap[field.type] || InputText"
                                 :id="field.name"
-                                :type="field.type"
-                                :placeholder="field.placeholder"
-                                :required="field.required"
                                 v-model="formData[field.name]"
+                                v-bind="field"
                                 class="p-inputtext-lg"
                             />
                         </div>
