@@ -33,11 +33,89 @@ const jsonConfigurationInput = ref(
                 required: true,
             },
             {
+                name: 'age',
+                type: 'number',
+                label: '年龄',
+                placeholder: '请输入您的年龄',
+                required: true,
+                validation: {
+                    min: 1,
+                    max: 120,
+                },
+            },
+            {
+                name: 'password',
+                type: 'password',
+                label: '密码',
+                placeholder: '请输入密码',
+                required: true,
+                validation: {
+                    min: 6,
+                },
+            },
+            {
+                name: 'gender',
+                type: 'radio',
+                label: '性别',
+                required: true,
+                options: [
+                    { label: '男', value: 'male' },
+                    { label: '女', value: 'female' },
+                    { label: '其他', value: 'other' },
+                ],
+            },
+            {
+                name: 'city',
+                type: 'select',
+                label: '城市',
+                placeholder: '请选择您所在的城市',
+                required: true,
+                options: [
+                    { label: '北京', value: 'beijing' },
+                    { label: '上海', value: 'shanghai' },
+                    { label: '广州', value: 'guangzhou' },
+                    { label: '深圳', value: 'shenzhen' },
+                    { label: '杭州', value: 'hangzhou' },
+                ],
+            },
+            {
+                name: 'hobbies',
+                type: 'multiselect',
+                label: '兴趣爱好',
+                placeholder: '请选择您的兴趣爱好',
+                required: false,
+                options: [
+                    { label: '阅读', value: 'reading' },
+                    { label: '运动', value: 'sports' },
+                    { label: '音乐', value: 'music' },
+                    { label: '旅行', value: 'travel' },
+                    { label: '编程', value: 'coding' },
+                    { label: '摄影', value: 'photography' },
+                ],
+            },
+            {
+                name: 'birthday',
+                type: 'date',
+                label: '生日',
+                placeholder: '请选择您的生日',
+                required: false,
+            },
+            {
                 name: 'bio',
                 type: 'textarea',
-                label: '简介',
-                placeholder: '请简单介绍一下自己',
-                autoResize: true,
+                label: '个人简介',
+                placeholder: '请简单介绍一下自己...',
+                required: false,
+                validation: {
+                    max: 500,
+                },
+            },
+            {
+                name: 'agree',
+                type: 'checkbox',
+                label: '同意条款',
+                checkboxLabel: '我已阅读并同意用户协议和隐私政策',
+                required: true,
             },
         ],
         null,
@@ -86,7 +164,11 @@ const clearForm = () => {
             <SplitterPanel :size="40" class="flex flex-col">
                 <div class="p-4 h-full flex flex-col">
                     <h2 class="text-2xl font-semibold mb-4">JSON 配置</h2>
-                    <Textarea v-model="jsonConfigurationInput" autoResize class="w-full flex-grow font-mono text-sm" />
+                    <Textarea
+                        v-model="jsonConfigurationInput"
+                        autoResize
+                        class="w-full flex-grow font-mono text-sm"
+                    />
                 </div>
             </SplitterPanel>
 
@@ -96,7 +178,12 @@ const clearForm = () => {
                         <FormBuilder :schema="formSchema" v-model="formData" />
                         <div class="flex items-center gap-4 mt-4 self-start">
                             <Button type="submit" label="提交" severity="primary" />
-                            <Button type="button" label="清空输入" severity="secondary" @click="clearForm" />
+                            <Button
+                                type="button"
+                                label="清空输入"
+                                severity="secondary"
+                                @click="clearForm"
+                            />
                         </div>
                     </form>
 
@@ -105,7 +192,8 @@ const clearForm = () => {
                         <pre
                             v-if="Object.keys(formData).length > 0"
                             class="whitespace-pre-wrap break-words font-mono text-sm bg-gray-900 text-white p-4 rounded-md"
-                        >{{ formData }}</pre>
+                            >{{ JSON.stringify(formData, null, 2) }}</pre
+                        >
                     </div>
                 </div>
             </SplitterPanel>
